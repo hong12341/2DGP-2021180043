@@ -26,6 +26,25 @@ TRIANGLE_RIGHT = (750, 50)
 open_canvas(SCREEN_WIDTH, SCREEN_HEIGHT)
 character = load_image('character.png')
 
+# 공통 함수
+# 전달받은 좌표에 캐릭터를 그리고 한 프레임을 화면에 표시한다.
+def draw_character_at(x, y=550):
+    clear_canvas()
+    character.draw(x, y)
+    update_canvas()
+    delay(0.02)
+
+# 두 점 사이를 직선으로 이동한다.
+def move_line(start, end, steps=100):
+    start_x, start_y = start
+    end_x, end_y = end
+    for step in range(steps + 1):
+        ratio = step / steps
+        x = round(start_x + (end_x - start_x) * ratio)
+        y = round(start_y + (end_y - start_y) * ratio)
+        draw_character_at(x, y)
+
+# 원 이동 함수
 # 캐릭터를 원 궤도 위에서 시계 방향으로 이동시킨다.
 def move_circle():
     print('circle')
@@ -45,23 +64,7 @@ def move_circle():
 
         draw_character_at(x, y)
 
-# 전달받은 좌표에 캐릭터를 그리고 한 프레임을 화면에 표시한다.
-def draw_character_at(x, y=550):
-    clear_canvas()
-    character.draw(x, y)
-    update_canvas()
-    delay(0.02)
-
-# 두 점 사이를 직선으로 이동한다.
-def move_line(start, end, steps=100):
-    start_x, start_y = start
-    end_x, end_y = end
-    for step in range(steps + 1):
-        ratio = step / steps
-        x = round(start_x + (end_x - start_x) * ratio)
-        y = round(start_y + (end_y - start_y) * ratio)
-        draw_character_at(x, y)
-
+# 사각형 이동 함수
 # 사각형의 위쪽 변을 왼쪽에서 오른쪽으로 이동한다.
 def move_rectangle_top():
     print('top')
@@ -92,6 +95,7 @@ def move_rectangle():
     clear_canvas()
     update_canvas()
 
+# 삼각형 이동 함수
 # 세 꼭짓점을 직선으로 연결하며 삼각형을 그린다.
 def move_triangle():
     print('triangle')
@@ -103,6 +107,7 @@ def move_triangle():
     for start, end in zip(points, points[1:]):
         move_line(start, end)
 
+# 전체 실행 함수
 # 원 -> 사각형 -> 삼각형 순서로 계속 반복한다.
 while True:
     move_circle()
