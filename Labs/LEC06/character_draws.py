@@ -24,6 +24,13 @@ RECTANGLE_LEFT = 150
 RECTANGLE_RIGHT = 650
 RECTANGLE_TOP = 500
 RECTANGLE_BOTTOM = 100
+RECTANGLE_POINTS = (
+    (RECTANGLE_LEFT, RECTANGLE_TOP),
+    (RECTANGLE_RIGHT, RECTANGLE_TOP),
+    (RECTANGLE_RIGHT, RECTANGLE_BOTTOM),
+    (RECTANGLE_LEFT, RECTANGLE_BOTTOM),
+    (RECTANGLE_LEFT, RECTANGLE_TOP),
+)
 
 # 삼각형의 꼭짓점
 TRIANGLE_TOP = (400, 550)
@@ -87,19 +94,19 @@ def move_circle():
 # 사각형 이동 함수
 # 사각형의 위쪽 변을 왼쪽에서 오른쪽으로 이동한다.
 def move_rectangle_top():
-    move_line((RECTANGLE_LEFT, RECTANGLE_TOP), (RECTANGLE_RIGHT, RECTANGLE_TOP))
+    move_line(RECTANGLE_POINTS[0], RECTANGLE_POINTS[1])
 
 # 사각형의 왼쪽 변을 위에서 아래 방향으로 이동한다.
 def move_rectangle_left():
-    move_line((RECTANGLE_RIGHT, RECTANGLE_TOP), (RECTANGLE_RIGHT, RECTANGLE_BOTTOM))
+    move_line(RECTANGLE_POINTS[1], RECTANGLE_POINTS[2])
 
 # 사각형의 아래쪽 변을 오른쪽에서 왼쪽으로 이동한다.
 def move_rectangle_bottom():
-    move_line((RECTANGLE_RIGHT, RECTANGLE_BOTTOM), (RECTANGLE_LEFT, RECTANGLE_BOTTOM))
+    move_line(RECTANGLE_POINTS[2], RECTANGLE_POINTS[3])
 
 # 사각형의 오른쪽 변을 아래에서 위 방향으로 이동한다.
 def move_rectangle_right():
-    move_line((RECTANGLE_LEFT, RECTANGLE_BOTTOM), (RECTANGLE_LEFT, RECTANGLE_TOP))
+    move_line(RECTANGLE_POINTS[3], RECTANGLE_POINTS[4])
 
 # 네 변을 차례대로 이동시켜 사각형을 그린다.
 def move_rectangle():
