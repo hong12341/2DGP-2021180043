@@ -85,11 +85,11 @@ def move_circle():
     global degree
 
     # 일정한 각도만큼 이동하며 원을 한 바퀴 돈다.
-    for _ in range(CIRCLE_FRAME_COUNT):
-        degree = (degree - CIRCLE_STEP_DEGREES) % 360
+    for _ in range(CIRCLE_FRAME_COUNT + 1):
         x, y = get_circle_position(degree)
 
         draw_character_at(x, y)
+        degree = (degree - CIRCLE_STEP_DEGREES) % 360
 
 # 사각형 이동 함수
 # 사각형의 위쪽 변을 왼쪽에서 오른쪽으로 이동한다.
