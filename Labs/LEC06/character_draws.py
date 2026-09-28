@@ -7,6 +7,11 @@ SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
 FRAME_DELAY = 0.02
 
+# 출력 메시지
+CIRCLE_MESSAGE = 'circle'
+RECTANGLE_MESSAGE = 'rectangle'
+TRIANGLE_MESSAGE = 'triangle'
+
 # 원의 중심과 크기
 CIRCLE_CENTER = (400, 300)
 CIRCLE_RADIUS = 230
@@ -59,7 +64,7 @@ def move_line(start, end):
 # 원 이동 함수
 # 캐릭터를 원 궤도 위에서 시계 방향으로 이동시킨다.
 def move_circle():
-    print('circle')
+    print(CIRCLE_MESSAGE)
 
     # 함수가 다시 호출되어도 이전 각도에서 이어서 시작한다.
     global degree
@@ -94,7 +99,7 @@ def move_rectangle_right():
 
 # 네 변을 차례대로 이동시켜 사각형을 그린다.
 def move_rectangle():
-    print('rectangle')
+    print(RECTANGLE_MESSAGE)
     move_rectangle_top()
     move_rectangle_left()
     move_rectangle_bottom()
@@ -104,7 +109,7 @@ def move_rectangle():
 # 삼각형 이동 함수
 # 세 꼭짓점을 직선으로 연결하며 삼각형을 그린다.
 def move_triangle():
-    print('triangle')
+    print(TRIANGLE_MESSAGE)
 
     # 꼭짓점: 위쪽 -> 왼쪽 아래 -> 오른쪽 아래 -> 위쪽
     points = (TRIANGLE_TOP, TRIANGLE_LEFT, TRIANGLE_RIGHT, TRIANGLE_TOP)
