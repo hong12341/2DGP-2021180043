@@ -31,16 +31,16 @@ character = load_image('character.png')
 degree = 0
 
 # 공통 함수
-# 화면을 지우고 갱신한다.
-def clear_and_update_canvas():
+# 화면을 지우고 필요한 그림을 그린 뒤 갱신한다.
+def clear_and_update_canvas(draw_action=None):
     clear_canvas()
+    if draw_action is not None:
+        draw_action()
     update_canvas()
 
 # 전달받은 좌표에 캐릭터를 그리고 한 프레임을 화면에 표시한다.
 def draw_character_at(x, y=550):
-    clear_canvas()
-    character.draw(x, y)
-    update_canvas()
+    clear_and_update_canvas(lambda: character.draw(x, y))
     delay(FRAME_DELAY)
 
 # 원과 같은 속도로 두 점 사이를 직선 이동한다.
