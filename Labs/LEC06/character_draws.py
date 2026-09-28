@@ -6,44 +6,41 @@ open_canvas(800,600)
 character = load_image('character.png')
 
 def move_circle():
+    print('circle')
     if 'degree' not in globals():
         globals()['degree'] = 0
 
-    globals()['degree'] = (globals()['degree'] + 5) % 360
-    theta = math.radians(globals()['degree'])
-    x = 400 + 200 * math.cos(theta)
-    y = 300 + 200 * math.sin(theta)
+    for _ in range(72):
+        globals()['degree'] = (globals()['degree'] + 5) % 360
+        theta = math.radians(globals()['degree'])
+        x = 400 + 200 * math.cos(theta)
+        y = 300 + 200 * math.sin(theta)
 
+        draw_character(x)
+    pass
+
+def draw_top():
+    print('top')
+    for x in range(0, 750, 5):
+        draw_character(x)
+    pass
+
+def draw_character(x):
     clear_canvas()
-    character.draw(x, y)
+    character.draw(x, 550)
     update_canvas()
     delay(0.02)
 
-def draw_top():
-    for y in range(300, 500, 5):
-        clear_canvas()
-        character.draw(400, y)
-        update_canvas()
-        delay(0.02)
 def draw_left():
-    for x in range(400, 200, -5):
-        clear_canvas()
-        character.draw(x, 500)
-        update_canvas()
-        delay(0.02)
+    print('left')
+    pass
 def draw_bottom():
-    for y in range(500, 300, -5):
-        clear_canvas()
-        character.draw(200, y)
-        update_canvas()
-        delay(0.02)
+    print('bottom')
+    pass
 def draw_right():
-    for x in range(200, 400, 5):
-        clear_canvas()
-        character.draw(x, 300)
-        update_canvas()
-        delay(0.02)
-        
+    print('right')
+    pass
+
 def move_rectangle():
     print('rectangle')
     draw_top()
@@ -56,7 +53,7 @@ def move_triangle():
     print('triangle')
     pass
 while True:
-    move_circle()
+    # move_circle()
     move_rectangle()
     move_triangle()
     pass
