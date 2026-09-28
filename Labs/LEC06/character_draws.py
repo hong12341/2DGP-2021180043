@@ -61,6 +61,13 @@ def move_line(start, end):
         y = round(start_y + (end_y - start_y) * ratio)
         draw_character_at(x, y)
 
+# 원 위의 현재 좌표를 계산한다.
+def get_circle_position(degree):
+    theta = math.radians(degree)
+    x = CIRCLE_CENTER[0] + CIRCLE_RADIUS * math.cos(theta)
+    y = CIRCLE_CENTER[1] + CIRCLE_RADIUS * math.sin(theta)
+    return x, y
+
 # 원 이동 함수
 # 캐릭터를 원 궤도 위에서 시계 방향으로 이동시킨다.
 def move_circle():
@@ -72,11 +79,7 @@ def move_circle():
     # 일정한 각도만큼 이동하며 원을 한 바퀴 돈다.
     for _ in range(CIRCLE_FRAME_COUNT):
         degree = (degree - CIRCLE_STEP_DEGREES) % 360
-        theta = math.radians(degree)
-
-        # 원의 중심과 반지름을 사용해 현재 좌표를 계산한다.
-        x = CIRCLE_CENTER[0] + CIRCLE_RADIUS * math.cos(theta)
-        y = CIRCLE_CENTER[1] + CIRCLE_RADIUS * math.sin(theta)
+        x, y = get_circle_position(degree)
 
         draw_character_at(x, y)
 
