@@ -59,7 +59,7 @@ def move_rectangle():
 
 def move_triangle():
     print('triangle')
-    points = ((400, 550), (200, 50), (600, 50), (400, 550))
+    points = ((400, 550), (50, 50), (750, 50), (400, 550))
     for start, end in zip(points, points[1:]):
         start_x, start_y = start
         end_x, end_y = end
