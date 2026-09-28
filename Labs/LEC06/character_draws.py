@@ -31,6 +31,11 @@ character = load_image('character.png')
 degree = 0
 
 # 공통 함수
+# 화면을 지우고 갱신한다.
+def clear_and_update_canvas():
+    clear_canvas()
+    update_canvas()
+
 # 전달받은 좌표에 캐릭터를 그리고 한 프레임을 화면에 표시한다.
 def draw_character_at(x, y=550):
     clear_canvas()
@@ -94,8 +99,7 @@ def move_rectangle():
     move_rectangle_left()
     move_rectangle_bottom()
     move_rectangle_right()
-    clear_canvas()
-    update_canvas()
+    clear_and_update_canvas()
 
 # 삼각형 이동 함수
 # 세 꼭짓점을 직선으로 연결하며 삼각형을 그린다.
