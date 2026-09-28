@@ -23,46 +23,46 @@ def move_circle():
         x = 400 + 230 * math.cos(theta)
         y = 300 + 230 * math.sin(theta)
 
-        draw_character(x, y)
+        draw_character_at(x, y)
 
 # 사각형의 위쪽 변을 왼쪽에서 오른쪽으로 이동한다.
-def draw_top():
+    def move_rectangle_top():
     print('top')
     for x in range(150, 651, 5):
-        draw_character(x, 500)
+        draw_character_at(x, 500)
 
 # 전달받은 좌표에 캐릭터를 그리고 한 프레임을 화면에 표시한다.
-def draw_character(x, y=550):
+    def draw_character_at(x, y=550):
     clear_canvas()
     character.draw(x, y)
     update_canvas()
     delay(0.02)
 
 # 사각형의 왼쪽 변을 위에서 아래 방향으로 이동한다.
-def draw_left():
+    def move_rectangle_left():
     print('left')
     for y in range(500, 99, -5):
-        draw_character(650, y)
+        draw_character_at(650, y)
 
 # 사각형의 아래쪽 변을 오른쪽에서 왼쪽으로 이동한다.
-def draw_bottom():
+    def move_rectangle_bottom():
     print('bottom')
     for x in range(650, 149, -5):
-        draw_character(x, 100)
+        draw_character_at(x, 100)
 
 # 사각형의 오른쪽 변을 아래에서 위 방향으로 이동한다.
-def draw_right():
+    def move_rectangle_right():
     print('right')
     for y in range(100, 501, 5):
-        draw_character(150, y)
+        draw_character_at(150, y)
 
 # 네 변을 차례대로 이동시켜 사각형을 그린다.
 def move_rectangle():
     print('rectangle')
-    draw_top()
-    draw_left()
-    draw_bottom()
-    draw_right()
+        move_rectangle_top()
+        move_rectangle_left()
+        move_rectangle_bottom()
+        move_rectangle_right()
     clear_canvas()
     update_canvas()
 
@@ -82,7 +82,7 @@ def move_triangle():
             ratio = step / 100
             x = round(start_x + (end_x - start_x) * ratio)
             y = round(start_y + (end_y - start_y) * ratio)
-            draw_character(x, y)
+            draw_character_at(x, y)
 
 # 원 -> 사각형 -> 삼각형 순서로 계속 반복한다.
 while True:
