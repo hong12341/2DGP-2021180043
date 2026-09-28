@@ -21,8 +21,8 @@ def move_circle():
 
 def draw_top():
     print('top')
-    for x in range(0, 751, 5):
-        draw_character(x)
+    for x in range(100, 701, 5):
+        draw_character(x, 500)
     pass
 
 def draw_character(x, y=550):
@@ -33,18 +33,18 @@ def draw_character(x, y=550):
 
 def draw_left():
     print('left')
-    for y in range(550, 49, -5):
-        draw_character(750, y)
+    for y in range(500, 99, -5):
+        draw_character(700, y)
     pass
 def draw_bottom():
     print('bottom')
-    for x in range(750, -1, -5):
-        draw_character(x, 50)
+    for x in range(700, 99, -5):
+        draw_character(x, 100)
     pass
 def draw_right():
     print('right')
-    for y in range(50, 551, 5):
-        draw_character(0, y)
+    for y in range(100, 501, 5):
+        draw_character(100, y)
     pass
 
 def move_rectangle():
