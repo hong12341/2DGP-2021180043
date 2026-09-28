@@ -2,8 +2,28 @@
 from pico2d import *
 import math
 
+# 화면 크기
+SCREEN_WIDTH = 800
+SCREEN_HEIGHT = 600
+
+# 원의 중심과 크기
+CIRCLE_CENTER = (400, 300)
+CIRCLE_RADIUS = 230
+CIRCLE_STEP_DEGREES = 5
+
+# 사각형의 경계 좌표
+RECTANGLE_LEFT = 150
+RECTANGLE_RIGHT = 650
+RECTANGLE_TOP = 500
+RECTANGLE_BOTTOM = 100
+
+# 삼각형의 꼭짓점
+TRIANGLE_TOP = (400, 550)
+TRIANGLE_LEFT = (50, 50)
+TRIANGLE_RIGHT = (750, 50)
+
 # 게임 화면을 열고 캐릭터 이미지를 준비한다.
-open_canvas(800,600)
+open_canvas(SCREEN_WIDTH, SCREEN_HEIGHT)
 character = load_image('character.png')
 
 # 캐릭터를 원 궤도 위에서 시계 방향으로 이동시킨다.
@@ -14,14 +34,14 @@ def move_circle():
     if 'degree' not in globals():
         globals()['degree'] = 0
 
-    # 5도씩 72번 이동하면 원을 한 바퀴 돈다.
-    for _ in range(72):
-        globals()['degree'] = (globals()['degree'] - 5) % 360
+    # 일정한 각도만큼 이동하며 원을 한 바퀴 돈다.
+    for _ in range(360 // CIRCLE_STEP_DEGREES):
+        globals()['degree'] = (globals()['degree'] - CIRCLE_STEP_DEGREES) % 360
         theta = math.radians(globals()['degree'])
 
-        # 화면 중앙을 중심으로 반지름 230인 원의 좌표를 계산한다.
-        x = 400 + 230 * math.cos(theta)
-        y = 300 + 230 * math.sin(theta)
+        # 원의 중심과 반지름을 사용해 현재 좌표를 계산한다.
+        x = CIRCLE_CENTER[0] + CIRCLE_RADIUS * math.cos(theta)
+        y = CIRCLE_CENTER[1] + CIRCLE_RADIUS * math.sin(theta)
 
         draw_character_at(x, y)
 
@@ -45,22 +65,22 @@ def move_line(start, end, steps=100):
 # 사각형의 위쪽 변을 왼쪽에서 오른쪽으로 이동한다.
 def move_rectangle_top():
     print('top')
-    move_line((150, 500), (650, 500))
+    move_line((RECTANGLE_LEFT, RECTANGLE_TOP), (RECTANGLE_RIGHT, RECTANGLE_TOP))
 
 # 사각형의 왼쪽 변을 위에서 아래 방향으로 이동한다.
 def move_rectangle_left():
     print('left')
-    move_line((650, 500), (650, 100))
+    move_line((RECTANGLE_RIGHT, RECTANGLE_TOP), (RECTANGLE_RIGHT, RECTANGLE_BOTTOM))
 
 # 사각형의 아래쪽 변을 오른쪽에서 왼쪽으로 이동한다.
 def move_rectangle_bottom():
     print('bottom')
-    move_line((650, 100), (150, 100))
+    move_line((RECTANGLE_RIGHT, RECTANGLE_BOTTOM), (RECTANGLE_LEFT, RECTANGLE_BOTTOM))
 
 # 사각형의 오른쪽 변을 아래에서 위 방향으로 이동한다.
 def move_rectangle_right():
     print('right')
-    move_line((150, 100), (150, 500))
+    move_line((RECTANGLE_LEFT, RECTANGLE_BOTTOM), (RECTANGLE_LEFT, RECTANGLE_TOP))
 
 # 네 변을 차례대로 이동시켜 사각형을 그린다.
 def move_rectangle():
@@ -77,7 +97,7 @@ def move_triangle():
     print('triangle')
 
     # 꼭짓점: 위쪽 -> 왼쪽 아래 -> 오른쪽 아래 -> 위쪽
-    points = ((400, 550), (50, 50), (750, 50), (400, 550))
+    points = (TRIANGLE_TOP, TRIANGLE_LEFT, TRIANGLE_RIGHT, TRIANGLE_TOP)
 
     # 인접한 두 꼭짓점 사이를 순서대로 이동한다.
     for start, end in zip(points, points[1:]):
