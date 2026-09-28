@@ -11,7 +11,7 @@ def move_circle():
         globals()['degree'] = 0
 
     for _ in range(72):
-        globals()['degree'] = (globals()['degree'] + 5) % 360
+        globals()['degree'] = (globals()['degree'] - 5) % 360
         theta = math.radians(globals()['degree'])
         x = 400 + 230 * math.cos(theta)
         y = 300 + 230 * math.sin(theta)
