@@ -139,5 +139,7 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
-    close_canvas()
+    try:
+        main()
+    finally:
+        close_canvas()
