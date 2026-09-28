@@ -29,6 +29,7 @@ RECTANGLE_BOTTOM = 100
 TRIANGLE_TOP = (400, 550)
 TRIANGLE_LEFT = (50, 50)
 TRIANGLE_RIGHT = (750, 50)
+TRIANGLE_POINTS = (TRIANGLE_TOP, TRIANGLE_LEFT, TRIANGLE_RIGHT, TRIANGLE_TOP)
 
 # 게임 화면을 열고 캐릭터 이미지를 준비한다.
 open_canvas(SCREEN_WIDTH, SCREEN_HEIGHT)
@@ -114,11 +115,8 @@ def move_rectangle():
 def move_triangle():
     print(TRIANGLE_MESSAGE)
 
-    # 꼭짓점: 위쪽 -> 왼쪽 아래 -> 오른쪽 아래 -> 위쪽
-    points = (TRIANGLE_TOP, TRIANGLE_LEFT, TRIANGLE_RIGHT, TRIANGLE_TOP)
-
     # 인접한 두 꼭짓점 사이를 순서대로 이동한다.
-    for start, end in zip(points, points[1:]):
+    for start, end in zip(TRIANGLE_POINTS, TRIANGLE_POINTS[1:]):
         move_line(start, end)
 
 # 전체 실행부
