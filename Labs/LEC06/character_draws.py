@@ -107,8 +107,11 @@ def move_triangle():
     for start, end in zip(points, points[1:]):
         move_line(start, end)
 
-# 전체 실행 함수
-# 원 -> 사각형 -> 삼각형 순서로 계속 반복한다.
+# 전체 실행부
+# 1. 원을 한 바퀴 이동한다.
+# 2. 사각형의 네 변을 순서대로 이동한다.
+# 3. 삼각형의 세 변을 순서대로 이동한다.
+# 삼각형까지 끝나면 다시 1번으로 돌아가 계속 반복한다.
 while True:
     move_circle()
     move_rectangle()
