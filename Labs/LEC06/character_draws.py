@@ -5,6 +5,7 @@ from pico2d import *
 # 화면 크기
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
+FRAME_DELAY = 0.02
 
 # 원의 중심과 크기
 CIRCLE_CENTER = (400, 300)
@@ -35,7 +36,7 @@ def draw_character_at(x, y=550):
     clear_canvas()
     character.draw(x, y)
     update_canvas()
-    delay(0.02)
+    delay(FRAME_DELAY)
 
 # 원과 같은 속도로 두 점 사이를 직선 이동한다.
 def move_line(start, end):
