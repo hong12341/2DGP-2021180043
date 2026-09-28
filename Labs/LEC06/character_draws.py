@@ -70,7 +70,7 @@ def move_triangle():
             draw_character(x, y)
     pass
 while True:
-    # move_circle()
+    move_circle()
     move_rectangle()
     move_triangle()
     pass
