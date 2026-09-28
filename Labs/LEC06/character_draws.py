@@ -59,6 +59,15 @@ def move_rectangle():
 
 def move_triangle():
     print('triangle')
+    points = ((400, 550), (200, 50), (600, 50), (400, 550))
+    for start, end in zip(points, points[1:]):
+        start_x, start_y = start
+        end_x, end_y = end
+        for step in range(101):
+            ratio = step / 100
+            x = round(start_x + (end_x - start_x) * ratio)
+            y = round(start_y + (end_y - start_y) * ratio)
+            draw_character(x, y)
     pass
 while True:
     # move_circle()
