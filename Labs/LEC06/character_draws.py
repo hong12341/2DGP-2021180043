@@ -67,22 +67,18 @@ def move_circle():
 # 사각형 이동 함수
 # 사각형의 위쪽 변을 왼쪽에서 오른쪽으로 이동한다.
 def move_rectangle_top():
-    print('top')
     move_line((RECTANGLE_LEFT, RECTANGLE_TOP), (RECTANGLE_RIGHT, RECTANGLE_TOP))
 
 # 사각형의 왼쪽 변을 위에서 아래 방향으로 이동한다.
 def move_rectangle_left():
-    print('left')
     move_line((RECTANGLE_RIGHT, RECTANGLE_TOP), (RECTANGLE_RIGHT, RECTANGLE_BOTTOM))
 
 # 사각형의 아래쪽 변을 오른쪽에서 왼쪽으로 이동한다.
 def move_rectangle_bottom():
-    print('bottom')
     move_line((RECTANGLE_RIGHT, RECTANGLE_BOTTOM), (RECTANGLE_LEFT, RECTANGLE_BOTTOM))
 
 # 사각형의 오른쪽 변을 아래에서 위 방향으로 이동한다.
 def move_rectangle_right():
-    print('right')
     move_line((RECTANGLE_LEFT, RECTANGLE_BOTTOM), (RECTANGLE_LEFT, RECTANGLE_TOP))
 
 # 네 변을 차례대로 이동시켜 사각형을 그린다.
