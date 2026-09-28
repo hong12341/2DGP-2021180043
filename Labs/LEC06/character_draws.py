@@ -10,6 +10,7 @@ SCREEN_HEIGHT = 600
 CIRCLE_CENTER = (400, 300)
 CIRCLE_RADIUS = 230
 CIRCLE_STEP_DEGREES = 5
+CIRCLE_FRAME_DISTANCE = 2 * CIRCLE_RADIUS * math.sin(math.radians(CIRCLE_STEP_DEGREES / 2))
 
 # 사각형의 경계 좌표
 RECTANGLE_LEFT = 150
@@ -34,10 +35,13 @@ def draw_character_at(x, y=550):
     update_canvas()
     delay(0.02)
 
-# 두 점 사이를 직선으로 이동한다.
-def move_line(start, end, steps=100):
+# 원과 같은 속도로 두 점 사이를 직선 이동한다.
+def move_line(start, end):
     start_x, start_y = start
     end_x, end_y = end
+    distance = math.hypot(end_x - start_x, end_y - start_y)
+    steps = max(1, round(distance / CIRCLE_FRAME_DISTANCE))
+
     for step in range(steps + 1):
         ratio = step / steps
         x = round(start_x + (end_x - start_x) * ratio)
