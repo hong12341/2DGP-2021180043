@@ -1,6 +1,6 @@
 # 도형 경로를 따라 캐릭터를 이동시키는 실습
-from pico2d import *
 import math
+from pico2d import *
 
 # 화면 크기
 SCREEN_WIDTH = 800
@@ -10,6 +10,7 @@ SCREEN_HEIGHT = 600
 CIRCLE_CENTER = (400, 300)
 CIRCLE_RADIUS = 230
 CIRCLE_STEP_DEGREES = 5
+CIRCLE_FRAME_COUNT = 360 // CIRCLE_STEP_DEGREES
 CIRCLE_FRAME_DISTANCE = 2 * CIRCLE_RADIUS * math.sin(math.radians(CIRCLE_STEP_DEGREES / 2))
 
 # 사각형의 경계 좌표
@@ -26,6 +27,7 @@ TRIANGLE_RIGHT = (750, 50)
 # 게임 화면을 열고 캐릭터 이미지를 준비한다.
 open_canvas(SCREEN_WIDTH, SCREEN_HEIGHT)
 character = load_image('character.png')
+degree = 0
 
 # 공통 함수
 # 전달받은 좌표에 캐릭터를 그리고 한 프레임을 화면에 표시한다.
@@ -54,13 +56,12 @@ def move_circle():
     print('circle')
 
     # 함수가 다시 호출되어도 이전 각도에서 이어서 시작한다.
-    if 'degree' not in globals():
-        globals()['degree'] = 0
+    global degree
 
     # 일정한 각도만큼 이동하며 원을 한 바퀴 돈다.
-    for _ in range(360 // CIRCLE_STEP_DEGREES):
-        globals()['degree'] = (globals()['degree'] - CIRCLE_STEP_DEGREES) % 360
-        theta = math.radians(globals()['degree'])
+    for _ in range(CIRCLE_FRAME_COUNT):
+        degree = (degree - CIRCLE_STEP_DEGREES) % 360
+        theta = math.radians(degree)
 
         # 원의 중심과 반지름을 사용해 현재 좌표를 계산한다.
         x = CIRCLE_CENTER[0] + CIRCLE_RADIUS * math.cos(theta)
