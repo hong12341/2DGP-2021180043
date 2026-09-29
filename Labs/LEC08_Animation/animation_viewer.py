@@ -54,6 +54,18 @@ EFFECT_X_OFFSET = 50
 ANIMATIONS = [WALK_FRAMES, RUN_FRAMES, JUMP_FRAMES, ATTACK_FRAMES, BODY_SLAM_FRAMES]
 
 
+def draw_frame(frame, center_x, bottom_y, scale):
+	source_x, source_top, source_width, source_height = frame
+	source_bottom = SHEET_HEIGHT - source_top - source_height
+	draw_width = int(source_width * scale)
+	draw_height = int(source_height * scale)
+	sheet.clip_draw(
+		source_x, source_bottom, source_width, source_height,
+		center_x, bottom_y + draw_height // 2,
+		draw_width, draw_height,
+	)
+
+
 open_canvas(CANVAS_WIDTH, CANVAS_HEIGHT)
 sheet_path = os.path.join(os.path.dirname(__file__), 'pikachu_sprite_sheet.png')
 sheet = load_image(sheet_path)
@@ -72,45 +84,31 @@ while running:
 	clear_canvas()
 
 	if show_default:
-		source_x, source_top, frame_width, frame_height = DEFAULT_STANDING_FRAME
+		sprite_frame = DEFAULT_STANDING_FRAME
 		sprite_x = CHARACTER_X + DEFAULT_X_OFFSET
 		jump_height = 0
 	else:
-		source_x, source_top, frame_width, frame_height = active_frames[frame_index]
+		sprite_frame = active_frames[frame_index]
 		sprite_x = CHARACTER_X
 		jump_height = (0, 30, 45, 0)[frame_index] if animation_index == 2 else 0
 
-	source_bottom = SHEET_HEIGHT - source_top - frame_height
-	draw_width = frame_width * CHARACTER_SCALE
-	draw_height = frame_height * CHARACTER_SCALE
 	sprite_baseline = DEFAULT_BASELINE_Y if show_default else BASELINE_Y
-	sheet.clip_draw(
-		source_x, source_bottom, frame_width, frame_height,
-		sprite_x,
-		sprite_baseline + jump_height + draw_height // 2,
-		draw_width, draw_height,
-	)
+	draw_frame(sprite_frame, sprite_x, sprite_baseline + jump_height, CHARACTER_SCALE)
 
 	if not show_default and animation_index == 3 and frame_index >= 1:
-		effect_x, effect_top, effect_width, effect_height = THUNDER_EFFECT
-		effect_bottom = SHEET_HEIGHT - effect_top - effect_height
-		effect_scale = 3.5
-		beam_width = int(effect_width * effect_scale)
-		beam_height = int(effect_height * effect_scale)
-		sheet.clip_draw(
-			effect_x, effect_bottom, effect_width, effect_height,
-			640 + EFFECT_X_OFFSET, BASELINE_Y + 210 + EFFECT_Y_OFFSET + beam_height // 2,
-			beam_width, beam_height,
+		draw_frame(
+			THUNDER_EFFECT,
+			640 + EFFECT_X_OFFSET,
+			BASELINE_Y + 210 + EFFECT_Y_OFFSET,
+			3.5,
 		)
 
 	if not show_default and animation_index == 3 and frame_index == 2:
-		impact_x, impact_top, impact_width, impact_height = GROUND_IMPACT_EFFECT
-		impact_bottom = SHEET_HEIGHT - impact_top - impact_height
-		impact_scale = 3.5
-		sheet.clip_draw(
-			impact_x, impact_bottom, impact_width, impact_height,
-			640 + EFFECT_X_OFFSET, BASELINE_Y + EFFECT_Y_OFFSET + int(impact_height * impact_scale) // 2,
-			int(impact_width * impact_scale), int(impact_height * impact_scale),
+		draw_frame(
+			GROUND_IMPACT_EFFECT,
+			640 + EFFECT_X_OFFSET,
+			BASELINE_Y + EFFECT_Y_OFFSET,
+			3.5,
 		)
 
 	update_canvas()
