@@ -34,15 +34,21 @@ ATTACK_FRAMES = [
 	(67, 500, 43, 42),
 	(110, 501, 34, 40),
 ]
+BODY_SLAM_FRAMES = [
+	(20, 321, 64, 44),
+	(86, 321, 54, 44),
+	(149, 321, 51, 30),
+	(209, 321, 52, 29),
+]
 THUNDER_EFFECT = (324, 584, 62, 56)
 GROUND_IMPACT_EFFECT = (315, 625, 90, 60)
-ANIMATIONS = [WALK_FRAMES, RUN_FRAMES, JUMP_FRAMES, ATTACK_FRAMES]
+ANIMATIONS = [WALK_FRAMES, RUN_FRAMES, JUMP_FRAMES, ATTACK_FRAMES, BODY_SLAM_FRAMES]
 
 
 open_canvas(CANVAS_WIDTH, CANVAS_HEIGHT)
 sheet_path = os.path.join(os.path.dirname(__file__), 'pikachu_sprite_sheet.png')
 sheet = load_image(sheet_path)
-animation_index = 3
+animation_index = 4
 active_frames = ANIMATIONS[animation_index]
 frame_index = 0
 running = True
@@ -52,13 +58,19 @@ while running:
 
 	source_x, source_top, frame_width, frame_height = active_frames[frame_index]
 	source_bottom = SHEET_HEIGHT - source_top - frame_height
-	draw_scale = 8 if animation_index in (2, 3) else SPRITE_SCALE
+	draw_scale = 7 if animation_index == 4 else 8 if animation_index in (2, 3) else SPRITE_SCALE
 	draw_width = frame_width * draw_scale
 	draw_height = frame_height * draw_scale
 	jump_height = (0, 30, 45, 15)[frame_index] if animation_index == 2 else 0
+	if animation_index == 3:
+		sprite_x = 250
+	elif animation_index == 4:
+		sprite_x = 240 + frame_index * 100
+	else:
+		sprite_x = CANVAS_WIDTH // 2
 	sheet.clip_draw(
 		source_x, source_bottom, frame_width, frame_height,
-		250 if animation_index == 3 else CANVAS_WIDTH // 2,
+		sprite_x,
 		BASELINE_Y + jump_height + draw_height // 2,
 		draw_width, draw_height,
 	)
@@ -98,6 +110,6 @@ while running:
 			active_frames = ANIMATIONS[animation_index]
 			frame_index = 0
 
-	delay(0.18 if animation_index == 3 else 0.08 if animation_index == 1 else FRAME_DELAY)
+	delay(0.10 if animation_index == 4 else 0.18 if animation_index == 3 else 0.08 if animation_index == 1 else FRAME_DELAY)
 
 close_canvas()
