@@ -5,6 +5,7 @@ from pico2d import *
 
 CANVAS_WIDTH = 800
 CANVAS_HEIGHT = 600
+SHEET_HEIGHT = 789
 FRAME_DELAY = 0.12
 SPRITE_SCALE = 10
 BASELINE_Y = 145
@@ -27,11 +28,12 @@ running = True
 while running:
 	clear_canvas()
 
-	source_x, source_y, frame_width, frame_height = WALK_FRAMES[frame_index]
+	source_x, source_top, frame_width, frame_height = WALK_FRAMES[frame_index]
+	source_bottom = SHEET_HEIGHT - source_top - frame_height
 	draw_width = frame_width * SPRITE_SCALE
 	draw_height = frame_height * SPRITE_SCALE
 	sheet.clip_draw(
-		source_x, source_y, frame_width, frame_height,
+		source_x, source_bottom, frame_width, frame_height,
 		CANVAS_WIDTH // 2,
 		BASELINE_Y + draw_height // 2,
 		draw_width, draw_height,
