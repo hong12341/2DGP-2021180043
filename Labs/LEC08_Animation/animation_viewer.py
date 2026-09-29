@@ -68,6 +68,13 @@ THUNDER_EFFECT = (324, 584, 62, 56)
 GROUND_IMPACT_EFFECT = (315, 625, 90, 60)
 EFFECT_Y_OFFSET = 100
 EFFECT_X_OFFSET = 50
+# 각 이펙트가 나타날 프레임, 크롭 이미지, 기준선 추가 높이
+ATTACK_EFFECTS = [
+	(1, THUNDER_EFFECT, 210),
+	(2, GROUND_IMPACT_EFFECT, 0),
+]
+ATTACK_EFFECT_X = 640 + EFFECT_X_OFFSET
+ATTACK_EFFECT_SCALE = 3.5
 # 기본 서기 뒤에 파이터 스탠스를 먼저 재생하고 나머지 동작을 차례로 반복한다.
 # 프레임 목록만 추가하므로 다른 동작과 같은 캐릭터 위치와 배율을 사용한다.
 ANIMATIONS = [
@@ -77,6 +84,12 @@ ANIMATIONS = [
 	JUMP_FRAMES,
 	ATTACK_FRAMES,
 	BODY_SLAM_FRAMES,
+]
+# 기본 속도와 다른 동작의 프레임 지연시간
+ANIMATION_DELAYS = [
+	(BODY_SLAM_FRAMES, 0.10),
+	(ATTACK_FRAMES, 0.18),
+	(RUN_FRAMES, 0.08),
 ]
 
 
@@ -91,6 +104,14 @@ def draw_frame(frame, center_x, bottom_y, scale):
 		center_x, bottom_y + draw_height // 2,
 		draw_width, draw_height,
 	)
+
+
+# 동작별 재생 속도를 찾고, 별도 설정이 없으면 기본 속도를 사용한다.
+def get_animation_delay(frames):
+	for animation_frames, frame_delay in ANIMATION_DELAYS:
+		if frames is animation_frames:
+			return frame_delay
+	return FRAME_DELAY
 
 
 # 캔버스와 스프라이트 시트를 준비한다.
@@ -127,23 +148,16 @@ while running:
 	sprite_baseline = DEFAULT_BASELINE_Y if show_default else BASELINE_Y
 	draw_frame(sprite_frame, sprite_x, sprite_baseline + jump_height, CHARACTER_SCALE)
 
-	# 번개 공격 프레임에는 번개 기둥을 함께 그린다.
-	if not show_default and active_frames is ATTACK_FRAMES and frame_index >= 1:
-		draw_frame(
-			THUNDER_EFFECT,
-			640 + EFFECT_X_OFFSET,
-			BASELINE_Y + 210 + EFFECT_Y_OFFSET,
-			3.5,
-		)
-
-	# 번개 공격 마지막 프레임에는 지면 타격 이펙트를 추가한다.
-	if not show_default and active_frames is ATTACK_FRAMES and frame_index == 2:
-		draw_frame(
-			GROUND_IMPACT_EFFECT,
-			640 + EFFECT_X_OFFSET,
-			BASELINE_Y + EFFECT_Y_OFFSET,
-			3.5,
-		)
+	# 공격 프레임 번호에 맞춰 번개와 지면 타격 이펙트를 그린다.
+	if not show_default and active_frames is ATTACK_FRAMES:
+		for first_frame, effect_frame, extra_y in ATTACK_EFFECTS:
+			if frame_index >= first_frame:
+				draw_frame(
+					effect_frame,
+					ATTACK_EFFECT_X,
+					BASELINE_Y + EFFECT_Y_OFFSET + extra_y,
+					ATTACK_EFFECT_SCALE,
+				)
 
 	update_canvas()
 	# 프레임을 진행하고 동작을 다섯 번 재생하면 다음 동작으로 바꾼다.
@@ -171,15 +185,7 @@ while running:
 		remaining = DEFAULT_HOLD_SECONDS - (time.monotonic() - default_started_at)
 		delay(min(FRAME_DELAY, max(0.0, remaining)))
 	else:
-		if active_frames is BODY_SLAM_FRAMES:
-			frame_delay = 0.10
-		elif active_frames is ATTACK_FRAMES:
-			frame_delay = 0.18
-		elif active_frames is RUN_FRAMES:
-			frame_delay = 0.08
-		else:
-			frame_delay = FRAME_DELAY
-		delay(frame_delay)
+		delay(get_animation_delay(active_frames))
 
 # 사용이 끝난 캔버스를 닫는다.
 close_canvas()
