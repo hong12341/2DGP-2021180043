@@ -7,8 +7,11 @@ CANVAS_WIDTH = 800
 CANVAS_HEIGHT = 600
 SHEET_HEIGHT = 789
 FRAME_DELAY = 0.12
-SPRITE_SCALE = 12
+CHARACTER_X = 380
+DEFAULT_X_OFFSET = -20
+CHARACTER_SCALE = 8
 BASELINE_Y = 145
+DEFAULT_BASELINE_Y = 90
 REPEATS_PER_ANIMATION = 5
 DEFAULT_HOLD_FRAMES = round(1.0 / FRAME_DELAY)
 
@@ -64,22 +67,21 @@ while running:
 
 	if show_default:
 		source_x, source_top, frame_width, frame_height = DEFAULT_STANDING_FRAME
-		draw_scale = 8
-		sprite_x = CANVAS_WIDTH // 2
+		sprite_x = CHARACTER_X + DEFAULT_X_OFFSET
 		jump_height = 0
 	else:
 		source_x, source_top, frame_width, frame_height = active_frames[frame_index]
-		draw_scale = 7 if animation_index == 4 else 8 if animation_index in (2, 3) else SPRITE_SCALE
+		sprite_x = CHARACTER_X
 		jump_height = (0, 30, 45, 0)[frame_index] if animation_index == 2 else 0
-		sprite_x = CANVAS_WIDTH // 2
 
 	source_bottom = SHEET_HEIGHT - source_top - frame_height
-	draw_width = frame_width * draw_scale
-	draw_height = frame_height * draw_scale
+	draw_width = frame_width * CHARACTER_SCALE
+	draw_height = frame_height * CHARACTER_SCALE
+	sprite_baseline = DEFAULT_BASELINE_Y if show_default else BASELINE_Y
 	sheet.clip_draw(
 		source_x, source_bottom, frame_width, frame_height,
 		sprite_x,
-		BASELINE_Y + jump_height + draw_height // 2,
+		sprite_baseline + jump_height + draw_height // 2,
 		draw_width, draw_height,
 	)
 
