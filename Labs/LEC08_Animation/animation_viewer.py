@@ -23,12 +23,20 @@ RUN_FRAMES = [
 	(149, 142, 52, 27),
 	(209, 144, 51, 24),
 ]
+JUMP_FRAMES = [
+	(25, 379, 39, 51),
+	(65, 386, 41, 29),
+	(110, 379, 29, 43),
+	(143, 386, 43, 29),
+]
+ANIMATIONS = [WALK_FRAMES, RUN_FRAMES, JUMP_FRAMES]
 
 
 open_canvas(CANVAS_WIDTH, CANVAS_HEIGHT)
 sheet_path = os.path.join(os.path.dirname(__file__), 'pikachu_sprite_sheet.png')
 sheet = load_image(sheet_path)
-active_frames = RUN_FRAMES
+animation_index = 2
+active_frames = ANIMATIONS[animation_index]
 frame_index = 0
 running = True
 
@@ -37,12 +45,14 @@ while running:
 
 	source_x, source_top, frame_width, frame_height = active_frames[frame_index]
 	source_bottom = SHEET_HEIGHT - source_top - frame_height
-	draw_width = frame_width * SPRITE_SCALE
-	draw_height = frame_height * SPRITE_SCALE
+	draw_scale = 8 if animation_index == 2 else SPRITE_SCALE
+	draw_width = frame_width * draw_scale
+	draw_height = frame_height * draw_scale
+	jump_height = (0, 30, 45, 15)[frame_index] if animation_index == 2 else 0
 	sheet.clip_draw(
 		source_x, source_bottom, frame_width, frame_height,
 		CANVAS_WIDTH // 2,
-		BASELINE_Y + draw_height // 2,
+		BASELINE_Y + jump_height + draw_height // 2,
 		draw_width, draw_height,
 	)
 
@@ -55,9 +65,10 @@ while running:
 		elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
 			running = False
 		elif event.type == SDL_KEYDOWN and event.key == SDLK_SPACE:
-			active_frames = WALK_FRAMES if active_frames is RUN_FRAMES else RUN_FRAMES
+			animation_index = (animation_index + 1) % len(ANIMATIONS)
+			active_frames = ANIMATIONS[animation_index]
 			frame_index = 0
 
-	delay(0.08 if active_frames is RUN_FRAMES else FRAME_DELAY)
+	delay(0.08 if animation_index == 1 else FRAME_DELAY)
 
 close_canvas()
