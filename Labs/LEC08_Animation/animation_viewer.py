@@ -48,6 +48,8 @@ BODY_SLAM_FRAMES = [
 ]
 THUNDER_EFFECT = (324, 584, 62, 56)
 GROUND_IMPACT_EFFECT = (315, 625, 90, 60)
+EFFECT_Y_OFFSET = 100
+EFFECT_X_OFFSET = 50
 ANIMATIONS = [WALK_FRAMES, RUN_FRAMES, JUMP_FRAMES, ATTACK_FRAMES, BODY_SLAM_FRAMES]
 
 
@@ -93,7 +95,7 @@ while running:
 		beam_height = int(effect_height * effect_scale)
 		sheet.clip_draw(
 			effect_x, effect_bottom, effect_width, effect_height,
-			640, BASELINE_Y + 210 + beam_height // 2,
+			640 + EFFECT_X_OFFSET, BASELINE_Y + 210 + EFFECT_Y_OFFSET + beam_height // 2,
 			beam_width, beam_height,
 		)
 
@@ -103,7 +105,7 @@ while running:
 		impact_scale = 3.5
 		sheet.clip_draw(
 			impact_x, impact_bottom, impact_width, impact_height,
-			640, BASELINE_Y + int(impact_height * impact_scale) // 2,
+			640 + EFFECT_X_OFFSET, BASELINE_Y + EFFECT_Y_OFFSET + int(impact_height * impact_scale) // 2,
 			int(impact_width * impact_scale), int(impact_height * impact_scale),
 		)
 
