@@ -1,4 +1,5 @@
 import os
+import time
 
 from pico2d import *
 
@@ -13,7 +14,7 @@ CHARACTER_SCALE = 12
 BASELINE_Y = 0
 DEFAULT_BASELINE_Y = -100
 REPEATS_PER_ANIMATION = 5
-DEFAULT_HOLD_FRAMES = round(1.0 / FRAME_DELAY)
+DEFAULT_HOLD_SECONDS = 1.0
 
 # Pixel bounds for the four Pikachu walking poses in pikachu_sprite_sheet.png.
 WALK_FRAMES = [
@@ -61,10 +62,13 @@ active_frames = ANIMATIONS[animation_index]
 frame_index = 0
 repeats_completed = 0
 show_default = True
-default_frames_remaining = DEFAULT_HOLD_FRAMES
+default_started_at = time.monotonic()
 running = True
 
 while running:
+	if show_default and time.monotonic() - default_started_at >= DEFAULT_HOLD_SECONDS:
+		show_default = False
+
 	clear_canvas()
 
 	if show_default:
@@ -110,11 +114,7 @@ while running:
 		)
 
 	update_canvas()
-	if show_default:
-		default_frames_remaining -= 1
-		if default_frames_remaining <= 0:
-			show_default = False
-	else:
+	if not show_default:
 		frame_index += 1
 		if frame_index >= len(active_frames):
 			frame_index = 0
@@ -124,7 +124,7 @@ while running:
 				active_frames = ANIMATIONS[animation_index]
 				repeats_completed = 0
 				show_default = True
-				default_frames_remaining = DEFAULT_HOLD_FRAMES
+				default_started_at = time.monotonic()
 
 	for event in get_events():
 		if event.type == SDL_QUIT:
@@ -133,7 +133,8 @@ while running:
 			running = False
 
 	if show_default:
-		delay(FRAME_DELAY)
+		remaining = DEFAULT_HOLD_SECONDS - (time.monotonic() - default_started_at)
+		delay(min(FRAME_DELAY, max(0.0, remaining)))
 	else:
 		delay(0.10 if animation_index == 4 else 0.18 if animation_index == 3 else 0.08 if animation_index == 1 else FRAME_DELAY)
 
