@@ -56,13 +56,27 @@ BODY_SLAM_FRAMES = [
 	(149, 321, 51, 30),
 	(209, 321, 52, 29),
 ]
+# 파이터 스탠스 동작의 프레임 좌표
+FIGHTER_STANCE_FRAMES = [
+	(27, 561, 46, 39),
+	(77, 562, 46, 38),
+	(126, 562, 47, 38),
+	(176, 561, 47, 39),
+]
 # 번개 공격에 사용할 이펙트 프레임과 화면상 위치 조정값
 THUNDER_EFFECT = (324, 584, 62, 56)
 GROUND_IMPACT_EFFECT = (315, 625, 90, 60)
 EFFECT_Y_OFFSET = 100
 EFFECT_X_OFFSET = 50
 # 자동 재생할 애니메이션 순서
-ANIMATIONS = [WALK_FRAMES, RUN_FRAMES, JUMP_FRAMES, ATTACK_FRAMES, BODY_SLAM_FRAMES]
+ANIMATIONS = [
+	WALK_FRAMES,
+	RUN_FRAMES,
+	JUMP_FRAMES,
+	ATTACK_FRAMES,
+	BODY_SLAM_FRAMES,
+	FIGHTER_STANCE_FRAMES,
+]
 
 
 # 프레임을 시트에서 잘라 지정한 위치와 크기로 그린다.
@@ -91,7 +105,7 @@ show_default = True
 default_started_at = time.monotonic()
 running = True
 
-# 기본 자세와 다섯 애니메이션을 순서대로 계속 재생한다.
+# 기본 자세와 여섯 애니메이션을 순서대로 계속 재생한다.
 while running:
 	# 기본 자세를 1초 보여 준 뒤 다음 동작으로 넘어간다.
 	if show_default and time.monotonic() - default_started_at >= DEFAULT_HOLD_SECONDS:
