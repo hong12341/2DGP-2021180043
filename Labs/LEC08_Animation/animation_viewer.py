@@ -9,6 +9,8 @@ SHEET_HEIGHT = 789
 FRAME_DELAY = 0.12
 SPRITE_SCALE = 12
 BASELINE_Y = 145
+REPEATS_PER_ANIMATION = 5
+DEFAULT_HOLD_FRAMES = round(1.0 / FRAME_DELAY)
 
 # Pixel bounds for the four Pikachu walking poses in pikachu_sprite_sheet.png.
 WALK_FRAMES = [
@@ -17,6 +19,7 @@ WALK_FRAMES = [
 	(106, 80, 37, 31),
 	(149, 78, 32, 35),
 ]
+DEFAULT_STANDING_FRAME = (20, 17, 43, 45)
 RUN_FRAMES = [
 	(30, 141, 50, 30),
 	(89, 144, 51, 23),
@@ -48,26 +51,36 @@ ANIMATIONS = [WALK_FRAMES, RUN_FRAMES, JUMP_FRAMES, ATTACK_FRAMES, BODY_SLAM_FRA
 open_canvas(CANVAS_WIDTH, CANVAS_HEIGHT)
 sheet_path = os.path.join(os.path.dirname(__file__), 'pikachu_sprite_sheet.png')
 sheet = load_image(sheet_path)
-animation_index = 4
+animation_index = 0
 active_frames = ANIMATIONS[animation_index]
 frame_index = 0
+repeats_completed = 0
+show_default = True
+default_frames_remaining = DEFAULT_HOLD_FRAMES
 running = True
 
 while running:
 	clear_canvas()
 
-	source_x, source_top, frame_width, frame_height = active_frames[frame_index]
+	if show_default:
+		source_x, source_top, frame_width, frame_height = DEFAULT_STANDING_FRAME
+		draw_scale = 8
+		sprite_x = CANVAS_WIDTH // 2
+		jump_height = 0
+	else:
+		source_x, source_top, frame_width, frame_height = active_frames[frame_index]
+		draw_scale = 7 if animation_index == 4 else 8 if animation_index in (2, 3) else SPRITE_SCALE
+		jump_height = (0, 30, 45, 15)[frame_index] if animation_index == 2 else 0
+		if animation_index == 3:
+			sprite_x = 250
+		elif animation_index == 4:
+			sprite_x = 240 + frame_index * 100
+		else:
+			sprite_x = CANVAS_WIDTH // 2
+
 	source_bottom = SHEET_HEIGHT - source_top - frame_height
-	draw_scale = 7 if animation_index == 4 else 8 if animation_index in (2, 3) else SPRITE_SCALE
 	draw_width = frame_width * draw_scale
 	draw_height = frame_height * draw_scale
-	jump_height = (0, 30, 45, 15)[frame_index] if animation_index == 2 else 0
-	if animation_index == 3:
-		sprite_x = 250
-	elif animation_index == 4:
-		sprite_x = 240 + frame_index * 100
-	else:
-		sprite_x = CANVAS_WIDTH // 2
 	sheet.clip_draw(
 		source_x, source_bottom, frame_width, frame_height,
 		sprite_x,
@@ -75,7 +88,7 @@ while running:
 		draw_width, draw_height,
 	)
 
-	if animation_index == 3 and frame_index >= 1:
+	if not show_default and animation_index == 3 and frame_index >= 1:
 		effect_x, effect_top, effect_width, effect_height = THUNDER_EFFECT
 		effect_bottom = SHEET_HEIGHT - effect_top - effect_height
 		effect_scale = 3.5
@@ -87,7 +100,7 @@ while running:
 			beam_width, beam_height,
 		)
 
-	if animation_index == 3 and frame_index == 2:
+	if not show_default and animation_index == 3 and frame_index == 2:
 		impact_x, impact_top, impact_width, impact_height = GROUND_IMPACT_EFFECT
 		impact_bottom = SHEET_HEIGHT - impact_top - impact_height
 		impact_scale = 3.5
@@ -98,18 +111,31 @@ while running:
 		)
 
 	update_canvas()
-	frame_index = (frame_index + 1) % len(active_frames)
+	if show_default:
+		default_frames_remaining -= 1
+		if default_frames_remaining <= 0:
+			show_default = False
+	else:
+		frame_index += 1
+		if frame_index >= len(active_frames):
+			frame_index = 0
+			repeats_completed += 1
+			if repeats_completed >= REPEATS_PER_ANIMATION:
+				animation_index = (animation_index + 1) % len(ANIMATIONS)
+				active_frames = ANIMATIONS[animation_index]
+				repeats_completed = 0
+				show_default = True
+				default_frames_remaining = DEFAULT_HOLD_FRAMES
 
 	for event in get_events():
 		if event.type == SDL_QUIT:
 			running = False
 		elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
 			running = False
-		elif event.type == SDL_KEYDOWN and event.key == SDLK_SPACE:
-			animation_index = (animation_index + 1) % len(ANIMATIONS)
-			active_frames = ANIMATIONS[animation_index]
-			frame_index = 0
 
-	delay(0.10 if animation_index == 4 else 0.18 if animation_index == 3 else 0.08 if animation_index == 1 else FRAME_DELAY)
+	if show_default:
+		delay(FRAME_DELAY)
+	else:
+		delay(0.10 if animation_index == 4 else 0.18 if animation_index == 3 else 0.08 if animation_index == 1 else FRAME_DELAY)
 
 close_canvas()
