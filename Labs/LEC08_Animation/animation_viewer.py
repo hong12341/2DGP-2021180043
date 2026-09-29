@@ -68,10 +68,10 @@ THUNDER_EFFECT = (324, 584, 62, 56)
 GROUND_IMPACT_EFFECT = (315, 625, 90, 60)
 EFFECT_Y_OFFSET = 100
 EFFECT_X_OFFSET = 50
-# 각 이펙트가 나타날 프레임, 크롭 이미지, 기준선 추가 높이
+# 각 이펙트의 프레임 번호, 이미지, X 보정값, Y 보정값
 ATTACK_EFFECTS = [
-	(1, THUNDER_EFFECT, 210),
-	(2, GROUND_IMPACT_EFFECT, 0),
+	(1, THUNDER_EFFECT, 0, 210),
+	(2, GROUND_IMPACT_EFFECT, 11, 0),
 ]
 ATTACK_EFFECT_X = 640 + EFFECT_X_OFFSET
 ATTACK_EFFECT_SCALE = 3.5
@@ -150,11 +150,11 @@ while running:
 
 	# 공격 프레임 번호에 맞춰 번개와 지면 타격 이펙트를 그린다.
 	if not show_default and active_frames is ATTACK_FRAMES:
-		for first_frame, effect_frame, extra_y in ATTACK_EFFECTS:
+		for first_frame, effect_frame, extra_x, extra_y in ATTACK_EFFECTS:
 			if frame_index >= first_frame:
 				draw_frame(
 					effect_frame,
-					ATTACK_EFFECT_X,
+					ATTACK_EFFECT_X + extra_x,
 					BASELINE_Y + EFFECT_Y_OFFSET + extra_y,
 					ATTACK_EFFECT_SCALE,
 				)
