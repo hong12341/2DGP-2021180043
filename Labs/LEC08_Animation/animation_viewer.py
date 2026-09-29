@@ -7,7 +7,7 @@ CANVAS_WIDTH = 800
 CANVAS_HEIGHT = 600
 SHEET_HEIGHT = 789
 FRAME_DELAY = 0.12
-SPRITE_SCALE = 10
+SPRITE_SCALE = 12
 BASELINE_Y = 145
 
 # Pixel bounds for the four Pikachu walking poses in pikachu_sprite_sheet.png.
