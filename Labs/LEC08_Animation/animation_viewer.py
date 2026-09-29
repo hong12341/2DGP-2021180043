@@ -68,7 +68,8 @@ THUNDER_EFFECT = (324, 584, 62, 56)
 GROUND_IMPACT_EFFECT = (315, 625, 90, 60)
 EFFECT_Y_OFFSET = 100
 EFFECT_X_OFFSET = 50
-# 자동 재생할 애니메이션 순서
+# 기본 서기 뒤에 파이터 스탠스를 먼저 재생하고 나머지 동작을 차례로 반복한다.
+# 프레임 목록만 추가하므로 다른 동작과 같은 캐릭터 위치와 배율을 사용한다.
 ANIMATIONS = [
 	FIGHTER_STANCE_FRAMES,
 	WALK_FRAMES,
