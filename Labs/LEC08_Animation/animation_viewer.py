@@ -70,12 +70,12 @@ EFFECT_Y_OFFSET = 100
 EFFECT_X_OFFSET = 50
 # 자동 재생할 애니메이션 순서
 ANIMATIONS = [
+	FIGHTER_STANCE_FRAMES,
 	WALK_FRAMES,
 	RUN_FRAMES,
 	JUMP_FRAMES,
 	ATTACK_FRAMES,
 	BODY_SLAM_FRAMES,
-	FIGHTER_STANCE_FRAMES,
 ]
 
 
@@ -121,13 +121,13 @@ while running:
 	else:
 		sprite_frame = active_frames[frame_index]
 		sprite_x = CHARACTER_X
-		jump_height = (0, 30, 45, 0)[frame_index] if animation_index == 2 else 0
+		jump_height = (0, 30, 45, 0)[frame_index] if active_frames is JUMP_FRAMES else 0
 
 	sprite_baseline = DEFAULT_BASELINE_Y if show_default else BASELINE_Y
 	draw_frame(sprite_frame, sprite_x, sprite_baseline + jump_height, CHARACTER_SCALE)
 
 	# 번개 공격 프레임에는 번개 기둥을 함께 그린다.
-	if not show_default and animation_index == 3 and frame_index >= 1:
+	if not show_default and active_frames is ATTACK_FRAMES and frame_index >= 1:
 		draw_frame(
 			THUNDER_EFFECT,
 			640 + EFFECT_X_OFFSET,
@@ -136,7 +136,7 @@ while running:
 		)
 
 	# 번개 공격 마지막 프레임에는 지면 타격 이펙트를 추가한다.
-	if not show_default and animation_index == 3 and frame_index == 2:
+	if not show_default and active_frames is ATTACK_FRAMES and frame_index == 2:
 		draw_frame(
 			GROUND_IMPACT_EFFECT,
 			640 + EFFECT_X_OFFSET,
@@ -170,7 +170,15 @@ while running:
 		remaining = DEFAULT_HOLD_SECONDS - (time.monotonic() - default_started_at)
 		delay(min(FRAME_DELAY, max(0.0, remaining)))
 	else:
-		delay(0.10 if animation_index == 4 else 0.18 if animation_index == 3 else 0.08 if animation_index == 1 else FRAME_DELAY)
+		if active_frames is BODY_SLAM_FRAMES:
+			frame_delay = 0.10
+		elif active_frames is ATTACK_FRAMES:
+			frame_delay = 0.18
+		elif active_frames is RUN_FRAMES:
+			frame_delay = 0.08
+		else:
+			frame_delay = FRAME_DELAY
+		delay(frame_delay)
 
 # 사용이 끝난 캔버스를 닫는다.
 close_canvas()
