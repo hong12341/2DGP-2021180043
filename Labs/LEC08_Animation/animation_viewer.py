@@ -70,13 +70,8 @@ while running:
 	else:
 		source_x, source_top, frame_width, frame_height = active_frames[frame_index]
 		draw_scale = 7 if animation_index == 4 else 8 if animation_index in (2, 3) else SPRITE_SCALE
-		jump_height = (0, 30, 45, 15)[frame_index] if animation_index == 2 else 0
-		if animation_index == 3:
-			sprite_x = 250
-		elif animation_index == 4:
-			sprite_x = 240 + frame_index * 100
-		else:
-			sprite_x = CANVAS_WIDTH // 2
+		jump_height = (0, 30, 45, 0)[frame_index] if animation_index == 2 else 0
+		sprite_x = CANVAS_WIDTH // 2
 
 	source_bottom = SHEET_HEIGHT - source_top - frame_height
 	draw_width = frame_width * draw_scale
@@ -96,7 +91,7 @@ while running:
 		beam_height = int(effect_height * effect_scale)
 		sheet.clip_draw(
 			effect_x, effect_bottom, effect_width, effect_height,
-			565, BASELINE_Y + 210 + beam_height // 2,
+			640, BASELINE_Y + 210 + beam_height // 2,
 			beam_width, beam_height,
 		)
 
@@ -106,7 +101,7 @@ while running:
 		impact_scale = 3.5
 		sheet.clip_draw(
 			impact_x, impact_bottom, impact_width, impact_height,
-			565, BASELINE_Y + int(impact_height * impact_scale) // 2,
+			640, BASELINE_Y + int(impact_height * impact_scale) // 2,
 			int(impact_width * impact_scale), int(impact_height * impact_scale),
 		)
 
