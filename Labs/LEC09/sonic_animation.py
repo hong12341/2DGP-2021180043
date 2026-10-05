@@ -19,6 +19,8 @@ from pico2d import (
 
 WINDOW_WIDTH = 1200
 WINDOW_HEIGHT = 800
+SPRITE_CENTER_X = WINDOW_WIDTH // 2
+SPRITE_CENTER_Y = WINDOW_HEIGHT // 2
 SPRITE_SHEET_HEIGHT = 525
 SPRITE_SCALE = 8
 FRAME_DELAY_SECONDS = 0.08
@@ -67,8 +69,8 @@ def draw_frame(sprite_sheet, animation_index, frame_index):
         animation.height,
         0,
         "",
-        WINDOW_WIDTH // 2,
-        WINDOW_HEIGHT // 2,
+        SPRITE_CENTER_X,
+        SPRITE_CENTER_Y,
         frame_width * SPRITE_SCALE,
         animation.height * SPRITE_SCALE,
     )
