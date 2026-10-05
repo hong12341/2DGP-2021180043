@@ -15,6 +15,8 @@ from pico2d import (
 WINDOW_WIDTH = 1200
 WINDOW_HEIGHT = 800
 SPRITE_SHEET_HEIGHT = 525
+SPRITE_SCALE = 8
+FRAME_DELAY_SECONDS = 0.08
 SPRITE_SHEET_PATH = Path(__file__).with_name("sonic-sprite.png")
 FRAME_STRIPS = (
     (39, 39, ((1, 29), (31, 56), (58, 86), (87, 115), (118, 147), (150, 179), (182, 210), (211, 239), (240, 268), (270, 293), (302, 330))),
@@ -48,13 +50,18 @@ def main():
         clear_canvas()
         top, height, frames = FRAME_STRIPS[0]
         left, right = frames[0]
-        sprite_sheet.clip_draw(
+        frame_width = right - left + 1
+        sprite_sheet.clip_composite_draw(
             left,
             SPRITE_SHEET_HEIGHT - top - height,
-            right - left + 1,
+            frame_width,
             height,
+            0,
+            "",
             WINDOW_WIDTH // 2,
             WINDOW_HEIGHT // 2,
+            frame_width * SPRITE_SCALE,
+            height * SPRITE_SCALE,
         )
         update_canvas()
 
@@ -62,7 +69,7 @@ def main():
             if event.type == SDL_QUIT:
                 running = False
 
-        delay(0.01)
+        delay(FRAME_DELAY_SECONDS)
 
     close_canvas()
 
