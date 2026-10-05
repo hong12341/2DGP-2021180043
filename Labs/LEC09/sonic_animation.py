@@ -14,6 +14,7 @@ from pico2d import (
 
 WINDOW_WIDTH = 1200
 WINDOW_HEIGHT = 800
+SPRITE_SHEET_HEIGHT = 525
 SPRITE_SHEET_PATH = Path(__file__).with_name("sonic-sprite.png")
 FRAME_STRIPS = (
     (39, 39, ((1, 29), (31, 56), (58, 86), (87, 115), (118, 147), (150, 179), (182, 210), (211, 239), (240, 268), (270, 293), (302, 330))),
@@ -49,7 +50,7 @@ def main():
         left, right = frames[0]
         sprite_sheet.clip_draw(
             left,
-            525 - top - height,
+            SPRITE_SHEET_HEIGHT - top - height,
             right - left + 1,
             height,
             WINDOW_WIDTH // 2,
