@@ -1,5 +1,6 @@
 from pathlib import Path
 from time import monotonic
+from dataclasses import dataclass
 from typing import NamedTuple
 
 from pico2d import (
@@ -31,6 +32,14 @@ class AnimationStrip(NamedTuple):
     top: int
     height: int
     frames: tuple[tuple[int, int], ...]
+
+
+@dataclass
+class PlaybackState:
+    animation_index: int = 0
+    frame_index: int = 0
+    repeats_completed: int = 0
+    pause_started_at: float | None = None
 
 
 FRAME_STRIPS = tuple(AnimationStrip(*strip) for strip in (
@@ -76,37 +85,34 @@ def main():
         except Exception as error:
             raise RuntimeError(f"스프라이트 시트를 읽지 못했습니다: {SPRITE_SHEET_PATH}") from error
 
-        animation_index = 0
-        frame_index = 0
-        repeats_completed = 0
-        pause_started_at = None
+        state = PlaybackState()
         running = True
 
         while running:
-            if pause_started_at is not None and monotonic() - pause_started_at >= ANIMATION_PAUSE_SECONDS:
-                animation_index = (animation_index + 1) % len(FRAME_STRIPS)
-                frame_index = 0
-                repeats_completed = 0
-                pause_started_at = None
+            if state.pause_started_at is not None and monotonic() - state.pause_started_at >= ANIMATION_PAUSE_SECONDS:
+                state.animation_index = (state.animation_index + 1) % len(FRAME_STRIPS)
+                state.frame_index = 0
+                state.repeats_completed = 0
+                state.pause_started_at = None
 
             clear_canvas()
-            draw_frame(sprite_sheet, animation_index, frame_index)
+            draw_frame(sprite_sheet, state.animation_index, state.frame_index)
             update_canvas()
-            frames = FRAME_STRIPS[animation_index].frames
+            frames = FRAME_STRIPS[state.animation_index].frames
 
             for event in get_events():
                 if event.type == SDL_QUIT or (event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE):
                     running = False
 
-            if pause_started_at is None:
-                frame_index += 1
-                if frame_index >= len(frames):
-                    repeats_completed += 1
-                    if repeats_completed >= REPEATS_PER_ANIMATION:
-                        frame_index = len(frames) - 1
-                        pause_started_at = monotonic()
+            if state.pause_started_at is None:
+                state.frame_index += 1
+                if state.frame_index >= len(frames):
+                    state.repeats_completed += 1
+                    if state.repeats_completed >= REPEATS_PER_ANIMATION:
+                        state.frame_index = len(frames) - 1
+                        state.pause_started_at = monotonic()
                     else:
-                        frame_index = 0
+                        state.frame_index = 0
             delay(FRAME_DELAY_SECONDS)
     finally:
         close_canvas()
