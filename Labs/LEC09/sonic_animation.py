@@ -3,6 +3,8 @@ from time import monotonic
 
 from pico2d import (
     SDL_QUIT,
+    SDL_KEYDOWN,
+    SDLK_ESCAPE,
     clear_canvas,
     close_canvas,
     delay,
@@ -84,7 +86,7 @@ def main():
         frames = FRAME_STRIPS[animation_index][3]
 
         for event in get_events():
-            if event.type == SDL_QUIT:
+            if event.type == SDL_QUIT or (event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE):
                 running = False
 
         if pause_started_at is None:
