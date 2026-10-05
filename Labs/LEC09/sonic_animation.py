@@ -35,6 +35,24 @@ FRAME_STRIPS = (
 )
 
 
+def draw_frame(sprite_sheet, animation_index, frame_index):
+    top, height, frames = FRAME_STRIPS[animation_index]
+    left, right = frames[frame_index]
+    frame_width = right - left + 1
+    sprite_sheet.clip_composite_draw(
+        left,
+        SPRITE_SHEET_HEIGHT - top - height,
+        frame_width,
+        height,
+        0,
+        "",
+        WINDOW_WIDTH // 2,
+        WINDOW_HEIGHT // 2,
+        frame_width * SPRITE_SCALE,
+        height * SPRITE_SCALE,
+    )
+
+
 def main():
     open_canvas(WINDOW_WIDTH, WINDOW_HEIGHT)
     if not SPRITE_SHEET_PATH.is_file():
@@ -61,21 +79,7 @@ def main():
             pause_started_at = None
 
         clear_canvas()
-        top, height, frames = FRAME_STRIPS[animation_index]
-        left, right = frames[frame_index]
-        frame_width = right - left + 1
-        sprite_sheet.clip_composite_draw(
-            left,
-            SPRITE_SHEET_HEIGHT - top - height,
-            frame_width,
-            height,
-            0,
-            "",
-            WINDOW_WIDTH // 2,
-            WINDOW_HEIGHT // 2,
-            frame_width * SPRITE_SCALE,
-            height * SPRITE_SCALE,
-        )
+        draw_frame(sprite_sheet, animation_index, frame_index)
         update_canvas()
 
         for event in get_events():
