@@ -1,4 +1,5 @@
 from pathlib import Path
+from time import monotonic
 
 from pico2d import (
     SDL_QUIT,
@@ -18,6 +19,7 @@ SPRITE_SHEET_HEIGHT = 525
 SPRITE_SCALE = 8
 FRAME_DELAY_SECONDS = 0.08
 REPEATS_PER_ANIMATION = 5
+ANIMATION_PAUSE_SECONDS = 1.0
 SPRITE_SHEET_PATH = Path(__file__).with_name("sonic-sprite.png")
 FRAME_STRIPS = (
     (39, 39, ((1, 29), (31, 56), (58, 86), (87, 115), (118, 147), (150, 179), (182, 210), (211, 239), (240, 268), (270, 293), (302, 330))),
@@ -48,9 +50,16 @@ def main():
     animation_index = 0
     frame_index = 0
     repeats_completed = 0
+    pause_started_at = None
     running = True
 
     while running:
+        if pause_started_at is not None and monotonic() - pause_started_at >= ANIMATION_PAUSE_SECONDS:
+            animation_index = (animation_index + 1) % len(FRAME_STRIPS)
+            frame_index = 0
+            repeats_completed = 0
+            pause_started_at = None
+
         clear_canvas()
         top, height, frames = FRAME_STRIPS[animation_index]
         left, right = frames[frame_index]
@@ -73,13 +82,15 @@ def main():
             if event.type == SDL_QUIT:
                 running = False
 
-        frame_index += 1
-        if frame_index >= len(frames):
-            frame_index = 0
-            repeats_completed += 1
-            if repeats_completed >= REPEATS_PER_ANIMATION:
-                repeats_completed = 0
-                animation_index = (animation_index + 1) % len(FRAME_STRIPS)
+        if pause_started_at is None:
+            frame_index += 1
+            if frame_index >= len(frames):
+                repeats_completed += 1
+                if repeats_completed >= REPEATS_PER_ANIMATION:
+                    frame_index = len(frames) - 1
+                    pause_started_at = monotonic()
+                else:
+                    frame_index = 0
         delay(FRAME_DELAY_SECONDS)
 
     close_canvas()
