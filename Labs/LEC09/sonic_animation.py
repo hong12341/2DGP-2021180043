@@ -1,5 +1,6 @@
 from pathlib import Path
 from time import monotonic
+from typing import NamedTuple
 
 from pico2d import (
     SDL_QUIT,
@@ -23,7 +24,16 @@ FRAME_DELAY_SECONDS = 0.08
 REPEATS_PER_ANIMATION = 5
 ANIMATION_PAUSE_SECONDS = 1.0
 SPRITE_SHEET_PATH = Path(__file__).with_name("sonic-sprite.png")
-FRAME_STRIPS = (
+
+
+class AnimationStrip(NamedTuple):
+    name: str
+    top: int
+    height: int
+    frames: tuple[tuple[int, int], ...]
+
+
+FRAME_STRIPS = tuple(AnimationStrip(*strip) for strip in (
     ("애니메이션 1", 39, 39, ((1, 29), (31, 56), (58, 86), (87, 115), (118, 147), (150, 179), (182, 210), (211, 239), (240, 268), (270, 293), (302, 330))),
     ("애니메이션 2", 79, 39, ((8, 33), (37, 63), (65, 95), (97, 133), (135, 166), (170, 201), (206, 231), (238, 261), (263, 292), (295, 330), (334, 365), (370, 398))),
     ("애니메이션 3", 121, 43, ((1, 33), (39, 73), (89, 123), (130, 163), (181, 214), (228, 260))),
@@ -34,24 +44,24 @@ FRAME_STRIPS = (
     ("애니메이션 8", 326, 45, ((1, 24), (31, 59), (65, 84), (90, 114), (119, 143), (149, 168), (184, 223), (232, 270))),
     ("애니메이션 9", 377, 40, ((1, 27), (31, 61), (64, 94), (99, 131), (136, 167), (176, 208), (217, 249), (254, 286))),
     ("애니메이션 10", 426, 43, ((6, 39), (49, 82), (96, 118), (125, 147))),
-)
+))
 
 
 def draw_frame(sprite_sheet, animation_index, frame_index):
-    _, top, height, frames = FRAME_STRIPS[animation_index]
-    left, right = frames[frame_index]
+    animation = FRAME_STRIPS[animation_index]
+    left, right = animation.frames[frame_index]
     frame_width = right - left + 1
     sprite_sheet.clip_composite_draw(
         left,
-        SPRITE_SHEET_HEIGHT - top - height,
+        SPRITE_SHEET_HEIGHT - animation.top - animation.height,
         frame_width,
-        height,
+        animation.height,
         0,
         "",
         WINDOW_WIDTH // 2,
         WINDOW_HEIGHT // 2,
         frame_width * SPRITE_SCALE,
-        height * SPRITE_SCALE,
+        animation.height * SPRITE_SCALE,
     )
 
 
@@ -82,7 +92,7 @@ def main():
             clear_canvas()
             draw_frame(sprite_sheet, animation_index, frame_index)
             update_canvas()
-            frames = FRAME_STRIPS[animation_index][3]
+            frames = FRAME_STRIPS[animation_index].frames
 
             for event in get_events():
                 if event.type == SDL_QUIT or (event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE):
