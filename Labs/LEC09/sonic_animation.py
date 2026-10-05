@@ -44,12 +44,14 @@ def main():
         close_canvas()
         raise RuntimeError(f"스프라이트 시트를 읽지 못했습니다: {SPRITE_SHEET_PATH}") from error
 
+    animation_index = 0
+    frame_index = 0
     running = True
 
     while running:
         clear_canvas()
-        top, height, frames = FRAME_STRIPS[0]
-        left, right = frames[0]
+        top, height, frames = FRAME_STRIPS[animation_index]
+        left, right = frames[frame_index]
         frame_width = right - left + 1
         sprite_sheet.clip_composite_draw(
             left,
@@ -69,6 +71,10 @@ def main():
             if event.type == SDL_QUIT:
                 running = False
 
+        frame_index += 1
+        if frame_index >= len(frames):
+            frame_index = 0
+            animation_index = (animation_index + 1) % len(FRAME_STRIPS)
         delay(FRAME_DELAY_SECONDS)
 
     close_canvas()
