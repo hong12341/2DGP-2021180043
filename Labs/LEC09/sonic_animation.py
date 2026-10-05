@@ -81,6 +81,7 @@ def main():
         clear_canvas()
         draw_frame(sprite_sheet, animation_index, frame_index)
         update_canvas()
+        frames = FRAME_STRIPS[animation_index][3]
 
         for event in get_events():
             if event.type == SDL_QUIT:
