@@ -74,6 +74,28 @@ def draw_frame(sprite_sheet, animation_index, frame_index):
     )
 
 
+def advance_playback(state, current_time):
+    if state.pause_started_at is not None:
+        if current_time - state.pause_started_at >= ANIMATION_PAUSE_SECONDS:
+            state.animation_index = (state.animation_index + 1) % len(FRAME_STRIPS)
+            state.frame_index = 0
+            state.repeats_completed = 0
+            state.pause_started_at = None
+        return
+
+    frames = FRAME_STRIPS[state.animation_index].frames
+    state.frame_index += 1
+    if state.frame_index < len(frames):
+        return
+
+    state.repeats_completed += 1
+    if state.repeats_completed >= REPEATS_PER_ANIMATION:
+        state.frame_index = len(frames) - 1
+        state.pause_started_at = current_time
+    else:
+        state.frame_index = 0
+
+
 def main():
     open_canvas(WINDOW_WIDTH, WINDOW_HEIGHT)
     try:
@@ -89,30 +111,15 @@ def main():
         running = True
 
         while running:
-            if state.pause_started_at is not None and monotonic() - state.pause_started_at >= ANIMATION_PAUSE_SECONDS:
-                state.animation_index = (state.animation_index + 1) % len(FRAME_STRIPS)
-                state.frame_index = 0
-                state.repeats_completed = 0
-                state.pause_started_at = None
-
             clear_canvas()
             draw_frame(sprite_sheet, state.animation_index, state.frame_index)
             update_canvas()
-            frames = FRAME_STRIPS[state.animation_index].frames
 
             for event in get_events():
                 if event.type == SDL_QUIT or (event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE):
                     running = False
 
-            if state.pause_started_at is None:
-                state.frame_index += 1
-                if state.frame_index >= len(frames):
-                    state.repeats_completed += 1
-                    if state.repeats_completed >= REPEATS_PER_ANIMATION:
-                        state.frame_index = len(frames) - 1
-                        state.pause_started_at = monotonic()
-                    else:
-                        state.frame_index = 0
+            advance_playback(state, monotonic())
             delay(FRAME_DELAY_SECONDS)
     finally:
         close_canvas()
