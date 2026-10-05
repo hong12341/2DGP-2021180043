@@ -19,7 +19,16 @@ SPRITE_SHEET_PATH = Path(__file__).with_name("sonic-sprite.png")
 
 def main():
     open_canvas(WINDOW_WIDTH, WINDOW_HEIGHT)
-    sprite_sheet = load_image(str(SPRITE_SHEET_PATH))
+    if not SPRITE_SHEET_PATH.is_file():
+        close_canvas()
+        raise FileNotFoundError(f"스프라이트 시트를 찾을 수 없습니다: {SPRITE_SHEET_PATH}")
+
+    try:
+        sprite_sheet = load_image(str(SPRITE_SHEET_PATH))
+    except Exception as error:
+        close_canvas()
+        raise RuntimeError(f"스프라이트 시트를 읽지 못했습니다: {SPRITE_SHEET_PATH}") from error
+
     running = True
 
     while running:
