@@ -57,50 +57,49 @@ def draw_frame(sprite_sheet, animation_index, frame_index):
 
 def main():
     open_canvas(WINDOW_WIDTH, WINDOW_HEIGHT)
-    if not SPRITE_SHEET_PATH.is_file():
-        close_canvas()
-        raise FileNotFoundError(f"스프라이트 시트를 찾을 수 없습니다: {SPRITE_SHEET_PATH}")
-
     try:
-        sprite_sheet = load_image(str(SPRITE_SHEET_PATH))
-    except Exception as error:
+        if not SPRITE_SHEET_PATH.is_file():
+            raise FileNotFoundError(f"스프라이트 시트를 찾을 수 없습니다: {SPRITE_SHEET_PATH}")
+
+        try:
+            sprite_sheet = load_image(str(SPRITE_SHEET_PATH))
+        except Exception as error:
+            raise RuntimeError(f"스프라이트 시트를 읽지 못했습니다: {SPRITE_SHEET_PATH}") from error
+
+        animation_index = 0
+        frame_index = 0
+        repeats_completed = 0
+        pause_started_at = None
+        running = True
+
+        while running:
+            if pause_started_at is not None and monotonic() - pause_started_at >= ANIMATION_PAUSE_SECONDS:
+                animation_index = (animation_index + 1) % len(FRAME_STRIPS)
+                frame_index = 0
+                repeats_completed = 0
+                pause_started_at = None
+
+            clear_canvas()
+            draw_frame(sprite_sheet, animation_index, frame_index)
+            update_canvas()
+            frames = FRAME_STRIPS[animation_index][3]
+
+            for event in get_events():
+                if event.type == SDL_QUIT or (event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE):
+                    running = False
+
+            if pause_started_at is None:
+                frame_index += 1
+                if frame_index >= len(frames):
+                    repeats_completed += 1
+                    if repeats_completed >= REPEATS_PER_ANIMATION:
+                        frame_index = len(frames) - 1
+                        pause_started_at = monotonic()
+                    else:
+                        frame_index = 0
+            delay(FRAME_DELAY_SECONDS)
+    finally:
         close_canvas()
-        raise RuntimeError(f"스프라이트 시트를 읽지 못했습니다: {SPRITE_SHEET_PATH}") from error
-
-    animation_index = 0
-    frame_index = 0
-    repeats_completed = 0
-    pause_started_at = None
-    running = True
-
-    while running:
-        if pause_started_at is not None and monotonic() - pause_started_at >= ANIMATION_PAUSE_SECONDS:
-            animation_index = (animation_index + 1) % len(FRAME_STRIPS)
-            frame_index = 0
-            repeats_completed = 0
-            pause_started_at = None
-
-        clear_canvas()
-        draw_frame(sprite_sheet, animation_index, frame_index)
-        update_canvas()
-        frames = FRAME_STRIPS[animation_index][3]
-
-        for event in get_events():
-            if event.type == SDL_QUIT or (event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE):
-                running = False
-
-        if pause_started_at is None:
-            frame_index += 1
-            if frame_index >= len(frames):
-                repeats_completed += 1
-                if repeats_completed >= REPEATS_PER_ANIMATION:
-                    frame_index = len(frames) - 1
-                    pause_started_at = monotonic()
-                else:
-                    frame_index = 0
-        delay(FRAME_DELAY_SECONDS)
-
-    close_canvas()
 
 
 if __name__ == "__main__":
