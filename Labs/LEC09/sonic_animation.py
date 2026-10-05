@@ -17,6 +17,7 @@ WINDOW_HEIGHT = 800
 SPRITE_SHEET_HEIGHT = 525
 SPRITE_SCALE = 8
 FRAME_DELAY_SECONDS = 0.08
+REPEATS_PER_ANIMATION = 5
 SPRITE_SHEET_PATH = Path(__file__).with_name("sonic-sprite.png")
 FRAME_STRIPS = (
     (39, 39, ((1, 29), (31, 56), (58, 86), (87, 115), (118, 147), (150, 179), (182, 210), (211, 239), (240, 268), (270, 293), (302, 330))),
@@ -46,6 +47,7 @@ def main():
 
     animation_index = 0
     frame_index = 0
+    repeats_completed = 0
     running = True
 
     while running:
@@ -74,7 +76,10 @@ def main():
         frame_index += 1
         if frame_index >= len(frames):
             frame_index = 0
-            animation_index = (animation_index + 1) % len(FRAME_STRIPS)
+            repeats_completed += 1
+            if repeats_completed >= REPEATS_PER_ANIMATION:
+                repeats_completed = 0
+                animation_index = (animation_index + 1) % len(FRAME_STRIPS)
         delay(FRAME_DELAY_SECONDS)
 
     close_canvas()
