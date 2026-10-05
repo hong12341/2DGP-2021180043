@@ -56,6 +56,8 @@ FRAME_STRIPS = tuple(AnimationStrip(*strip) for strip in (
     ("애니메이션 9", 377, 40, ((1, 27), (31, 61), (64, 94), (99, 131), (136, 167), (176, 208), (217, 249), (254, 286))),
     ("애니메이션 10", 426, 43, ((6, 39), (49, 82), (96, 118), (125, 147))),
 ))
+ANIMATION_COUNT = len(FRAME_STRIPS)
+TOTAL_FRAME_COUNT = sum(len(animation.frames) for animation in FRAME_STRIPS)
 
 
 def draw_frame(sprite_sheet, animation_index, frame_index):
@@ -79,7 +81,7 @@ def draw_frame(sprite_sheet, animation_index, frame_index):
 def advance_playback(state, current_time):
     if state.pause_started_at is not None:
         if current_time - state.pause_started_at >= ANIMATION_PAUSE_SECONDS:
-            state.animation_index = (state.animation_index + 1) % len(FRAME_STRIPS)
+            state.animation_index = (state.animation_index + 1) % ANIMATION_COUNT
             state.frame_index = 0
             state.repeats_completed = 0
             state.pause_started_at = None
