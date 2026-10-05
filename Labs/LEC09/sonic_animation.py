@@ -1,6 +1,15 @@
 from pathlib import Path
 
-from pico2d import clear_canvas, close_canvas, delay, load_image, open_canvas, update_canvas
+from pico2d import (
+    SDL_QUIT,
+    clear_canvas,
+    close_canvas,
+    delay,
+    get_events,
+    load_image,
+    open_canvas,
+    update_canvas,
+)
 
 
 WINDOW_WIDTH = 1200
@@ -11,11 +20,17 @@ SPRITE_SHEET_PATH = Path(__file__).with_name("sonic-sprite.png")
 def main():
     open_canvas(WINDOW_WIDTH, WINDOW_HEIGHT)
     sprite_sheet = load_image(str(SPRITE_SHEET_PATH))
+    running = True
 
-    while True:
+    while running:
         clear_canvas()
         sprite_sheet.draw(WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2)
         update_canvas()
+
+        for event in get_events():
+            if event.type == SDL_QUIT:
+                running = False
+
         delay(0.01)
 
     close_canvas()
