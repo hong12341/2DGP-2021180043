@@ -28,10 +28,12 @@ FRAME_WIDTH = 100
 FRAME_HEIGHT = 100
 FRAME_COUNT = 8
 FRAME_INTERVAL = 0.08
-CHARACTER_WIDTH = 42
-CHARACTER_HEIGHT = 92
 CHARACTER_RADIUS_X = 32
 CHARACTER_RADIUS_Y = 45
+IDLE_RIGHT_ROW_BOTTOM = 302
+IDLE_LEFT_ROW_BOTTOM = 202
+RUN_RIGHT_ROW_BOTTOM = 102
+RUN_LEFT_ROW_BOTTOM = 2
 ASSET_DIR = Path(__file__).parent
 MOVEMENT_KEYS = {
 	SDLK_UP: (0, 1),
@@ -56,40 +58,26 @@ def handle_events(pressed_keys):
 	return running
 
 
-def draw_character(idle_image, running_sheet, x, y, is_moving, frame, facing_left):
+def draw_character(animation_sheet, x, y, is_moving, frame, facing_left):
 	if is_moving:
-		running_sheet.clip_composite_draw(
-			frame * FRAME_WIDTH,
-			0,
-			FRAME_WIDTH,
-			FRAME_HEIGHT,
-			0,
-			"h" if facing_left else "",
-			x,
-			y,
-			FRAME_WIDTH,
-			FRAME_HEIGHT,
-		)
+		source_y = RUN_LEFT_ROW_BOTTOM if facing_left else RUN_RIGHT_ROW_BOTTOM
 	else:
-		idle_image.clip_composite_draw(
-			0,
-			0,
-			CHARACTER_WIDTH,
-			CHARACTER_HEIGHT,
-			0,
-			"h" if facing_left else "",
-			x,
-			y,
-			CHARACTER_WIDTH,
-			CHARACTER_HEIGHT,
-		)
+		source_y = IDLE_LEFT_ROW_BOTTOM if facing_left else IDLE_RIGHT_ROW_BOTTOM
+
+	animation_sheet.clip_draw(
+		frame * FRAME_WIDTH,
+		source_y,
+		FRAME_WIDTH,
+		FRAME_HEIGHT,
+		x,
+		y,
+	)
 
 
 def main():
 	open_canvas(WINDOW_WIDTH, WINDOW_HEIGHT)
 	try:
-		idle_image = load_image(str(ASSET_DIR / "character.png"))
-		running_sheet = load_image(str(ASSET_DIR / "run_animation.png"))
+		animation_sheet = load_image(str(ASSET_DIR / "animation_sheet.png"))
 		background = load_image(str(ASSET_DIR / "TUK_GROUND.png"))
 
 		character_x = WINDOW_WIDTH // 2
@@ -115,15 +103,13 @@ def main():
 				magnitude = hypot(move_x, move_y)
 				character_x += move_x / magnitude * MOVE_SPEED * delta_time
 				character_y += move_y / magnitude * MOVE_SPEED * delta_time
-				animation_elapsed += delta_time
 				if move_x:
 					facing_left = move_x < 0
-				if animation_elapsed >= FRAME_INTERVAL:
-					frame = (frame + 1) % FRAME_COUNT
-					animation_elapsed %= FRAME_INTERVAL
-			else:
-				frame = 0
-				animation_elapsed = 0.0
+
+			animation_elapsed += delta_time
+			if animation_elapsed >= FRAME_INTERVAL:
+				frame = (frame + 1) % FRAME_COUNT
+				animation_elapsed %= FRAME_INTERVAL
 
 			character_x = max(CHARACTER_RADIUS_X, min(WINDOW_WIDTH - CHARACTER_RADIUS_X, character_x))
 			character_y = max(CHARACTER_RADIUS_Y, min(WINDOW_HEIGHT - CHARACTER_RADIUS_Y, character_y))
@@ -136,8 +122,7 @@ def main():
 				WINDOW_HEIGHT,
 			)
 			draw_character(
-				idle_image,
-				running_sheet,
+				animation_sheet,
 				character_x,
 				character_y,
 				is_moving,
