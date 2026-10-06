@@ -28,7 +28,6 @@ FRAME_WIDTH = 100
 FRAME_HEIGHT = 100
 FRAME_COUNT = 8
 FRAME_INTERVAL = 0.08
-WALKING_ROW_BOTTOM = 302
 CHARACTER_WIDTH = 42
 CHARACTER_HEIGHT = 92
 CHARACTER_RADIUS_X = 32
@@ -57,11 +56,11 @@ def handle_events(pressed_keys):
 	return running
 
 
-def draw_character(idle_image, walking_sheet, x, y, is_moving, frame, facing_left):
+def draw_character(idle_image, running_sheet, x, y, is_moving, frame, facing_left):
 	if is_moving:
-		walking_sheet.clip_composite_draw(
+		running_sheet.clip_composite_draw(
 			frame * FRAME_WIDTH,
-			WALKING_ROW_BOTTOM,
+			0,
 			FRAME_WIDTH,
 			FRAME_HEIGHT,
 			0,
@@ -90,7 +89,7 @@ def main():
 	open_canvas(WINDOW_WIDTH, WINDOW_HEIGHT)
 	try:
 		idle_image = load_image(str(ASSET_DIR / "character.png"))
-		walking_sheet = load_image(str(ASSET_DIR / "animation_sheet.png"))
+		running_sheet = load_image(str(ASSET_DIR / "run_animation.png"))
 		ground = load_image(str(ASSET_DIR / "grass.png"))
 
 		character_x = WINDOW_WIDTH // 2
@@ -133,7 +132,7 @@ def main():
 			ground.draw(WINDOW_WIDTH // 2, 30)
 			draw_character(
 				idle_image,
-				walking_sheet,
+				running_sheet,
 				character_x,
 				character_y,
 				is_moving,
