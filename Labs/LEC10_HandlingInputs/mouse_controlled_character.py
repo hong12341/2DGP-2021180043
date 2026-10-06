@@ -90,7 +90,7 @@ def main():
 	try:
 		idle_image = load_image(str(ASSET_DIR / "character.png"))
 		running_sheet = load_image(str(ASSET_DIR / "run_animation.png"))
-		ground = load_image(str(ASSET_DIR / "grass.png"))
+		background = load_image(str(ASSET_DIR / "TUK_GROUND.png"))
 
 		character_x = WINDOW_WIDTH // 2
 		character_y = WINDOW_HEIGHT // 2
@@ -129,7 +129,12 @@ def main():
 			character_y = max(CHARACTER_RADIUS_Y, min(WINDOW_HEIGHT - CHARACTER_RADIUS_Y, character_y))
 
 			clear_canvas()
-			ground.draw(WINDOW_WIDTH // 2, 30)
+			background.draw(
+				WINDOW_WIDTH // 2,
+				WINDOW_HEIGHT // 2,
+				WINDOW_WIDTH,
+				WINDOW_HEIGHT,
+			)
 			draw_character(
 				idle_image,
 				running_sheet,
