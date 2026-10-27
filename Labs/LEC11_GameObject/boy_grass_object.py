@@ -1,7 +1,8 @@
 from pico2d import *
 import random
 
-
+WINDOW_WIDTH = 800
+WINDOW_HEIGHT = 600
 # Game object class here
 
 #게임 객체 파악
@@ -40,8 +41,35 @@ class Zombie:
         frame_width = self.image.w // 10
         frame_height = self.image.h
         self.image.clip_draw(self.frame * frame_width, 0, frame_width, frame_height, self.x, self.y, frame_width // 2 , frame_height // 2)
+class Ball:
+    def __init__(self):
+        self.x = random.randint(0, 700)
+        self.y = 599
+        self.frame = random.randint(0, 7)
+        self.image = load_image('ball21x21.png')
+    def update(self):
+        self.frame = (self.frame +1)%1
+        self.y -= random.randint(1, 50)
+        if self.y < 60:
+            self.y = 60
+    def draw(self):
+        self.image.clip_draw(self.frame*50, 0, 50, 50, self.x, self.y)
+y = WINDOW_HEIGHT
 
-
+class Ball2:
+    def __init__(self):
+        self.x = random.randint(0, 800)
+        self.y = 599
+        self.frame = random.randint(0,7)
+        self.image = load_image('ball41x41.png')
+    def update(self):
+        self.frame = (self.frame +1)%1
+        self.y -= random.randint(1,10)
+        if self.y < 100:
+            self.y = 100
+    def draw(self):
+        self.image.clip_draw(self.frame*100, 0, 100, 100, self.x, self.y)
+        
 def handle_events():
     global running
     events = get_events()
@@ -67,6 +95,11 @@ def reset_world():
     zombie = Zombie()
     world.append(zombie)
 
+    object = [Ball() for i in range(10)]
+    world += object
+
+    object2 = [Ball2() for i in range(10)]
+    world += object2
 
 def update_world():
     for o in world:
